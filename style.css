@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@100..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body.font-arabic, [lang="ar"], [dir="rtl"] {
+    font-family: 'Noto Sans Arabic', sans-serif !important;
+    line-height: 1.65;
+}
+
+h1[lang="ar"], h2[lang="ar"], h3[lang="ar"],
+[dir="rtl"] h1, [dir="rtl"] h2, [dir="rtl"] h3 {
+    font-family: 'Noto Sans Arabic', sans-serif !important;
+    letter-spacing: -0.01em;
+}
+
+.hero-pattern {
+    background-image: linear-gradient(to right bottom, rgba(2, 132, 199, 0.9), rgba(12, 74, 110, 0.9)), url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
+    background-size: cover;
+    background-position: center;
+}
+
+/* RTL Specific Adjustments & Phone Number Bidi Isolation */
+[dir="rtl"] .mr-1 { margin-right: 0; margin-left: 0.25rem; }
+[dir="rtl"] .mr-2 { margin-right: 0; margin-left: 0.5rem; }
+[dir="rtl"] .ml-2 { margin-left: 0; margin-right: 0.5rem; }
+
+.phone-number, .whatsapp-number {
+    direction: ltr !important;
+    unicode-bidi: isolate !important;
+    display: inline-block;
+}
+
+/* WhatsApp Widget and Fallback Styling */
+#whatsapp-card {
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.whatsapp-badge-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Ensure SVG icon is visible if FontAwesome fails */
+.fa-whatsapp-svg {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+
+
