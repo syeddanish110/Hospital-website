@@ -367,13 +367,52 @@ document.addEventListener('DOMContentLoaded', () => {
     if (savedLang) {
         targetLang = savedLang;
     } else {
-        // Auto-detect browser language if Arabic
-        const navLang = navigator.language || (navigator.languages && navigator.languages[0]) || '';
-        if (navLang.toLowerCase().startsWith('ar')) {
-            targetLang = 'ar';
+        // 1. Timezone Check (Instant, synchronous, highly reliable for visitors from Iraq)
+        try {
+            const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            if (tz && (tz.toLowerCase().includes('baghdad') || tz.toLowerCase().includes('iraq'))) {
+                targetLang = 'ar';
+            }
+        } catch (e) {
+            console.warn("Timezone detection failed", e);
+        }
+
+        // 2. Browser Language Check (Auto-detect if browser language is Arabic)
+        if (targetLang !== 'ar') {
+            const navLang = navigator.language || (navigator.languages && navigator.languages[0]) || '';
+            if (navLang.toLowerCase().startsWith('ar')) {
+                targetLang = 'ar';
+            }
         }
     }
 
     applyLanguage(targetLang);
+
+    // 3. Asynchronous Geo-IP Check (Non-blocking fallback to detect Iraq users)
+    if (!savedLang && targetLang !== 'ar') {
+        // First try ipapi.co (SSL, free for small scale)
+        fetch('https://ipapi.co/json/')
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.country_code === 'IQ') {
+                    if (!localStorage.getItem('medconnect_lang')) {
+                        applyLanguage('ar');
+                    }
+                }
+            })
+            .catch(err => {
+                // Secondary fallback: freeipapi.com
+                fetch('https://freeipapi.com/api/json')
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data && (data.countryCode === 'IQ' || data.countryCode === 'IRQ')) {
+                            if (!localStorage.getItem('medconnect_lang')) {
+                                applyLanguage('ar');
+                            }
+                        }
+                    })
+                    .catch(e => console.log('Location detection fallback failed'));
+            });
+    }
 });
 
